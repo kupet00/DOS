@@ -16,7 +16,7 @@ cyanprint() { printf "${CYAN}%s${RESET}\n" "$1"; }
 fn_goodafternoon() { echo; echo "Good afternoon."; }
 fn_goodmorning() { echo; echo "Good morning."; }
 fn_bye() { echo "Bye bye."; exit 0; }
-fn_fail() { echo "Wrong option." exit 1; }
+fn_fail() { echo "Wrong option."; }
 
 sub-submenu() {
     echo -ne "
@@ -52,41 +52,25 @@ Choose an option:  "
     esac
 }
 
-submenu() {
+princemenu() {
     echo -ne "
 $(blueprint 'CMD1 SUBMENU')
-$(greenprint '1)') SUBCMD1
-$(magentaprint '2)') Go Back to Main Menu
+$(greenprint '1)') Prince of Persia CGA
+$(greenprint '2)') Prince of Persia VGA
+$(redprint 'b)') Back to Main Menu
 $(redprint '0)') Exit
 Choose an option:  "
     read -r ans
     case $ans in
     1)
-        sub-submenu
-        submenu
+        cd confs/
+        flatpak run com.dosbox_x.DOSBox-X -conf prince_cga.conf
         ;;
     2)
-        menu
+        cd confs/
+        flatpak run com.dosbox_x.DOSBox-X -conf prince.conf
         ;;
-    0)
-        fn_bye
-        ;;
-    *)
-        fn_fail
-        ;;
-    esac
-}
-
-mainmenu() {
-    echo -ne "
-$(magentaprint 'MAIN MENU')
-$(greenprint '1)') CMD1
-$(redprint '0)') Exit
-Choose an option:  "
-    read -r ans
-    case $ans in
-    1)
-        submenu
+    b)
         mainmenu
         ;;
     0)
@@ -94,6 +78,28 @@ Choose an option:  "
         ;;
     *)
         fn_fail
+        princemenu
+        ;;
+    esac
+}
+
+mainmenu() {
+    echo -ne "
+$(magentaprint 'MAIN MENU')
+$(greenprint '1)') Prince of Persia
+$(redprint '0)') Exit
+Choose an option:  "
+    read -r ans
+    case $ans in
+    1)
+        princemenu
+        ;;
+    0)
+        fn_bye
+        ;;
+    *)
+        fn_fail
+        mainmenu
         ;;
     esac
 }
